@@ -1,0 +1,32 @@
+{
+    "secret": "./config/.secret",
+    "network": {
+        "name": "develop",
+        "rpc": "http://3.236.195.117:8998"
+    },
+    "tranformerDeployInfoPath": "./deployments.json",
+    "transformers": {
+        "TEST1": {
+            "erc20": {
+                "name": "TEST1",
+                "mintTo": "0x0000000000000000000000000000000000000000",
+                "mintNum": "21000000"
+            },
+            "transformer": {
+                "assetId": "0x2a8e070f01af52d5a3abb3db90cf8a648d2f410e2481bc00203f62c13297ab11",
+                "utxos": [{"txid":"0x9b26f363192fa52dc334a6415b747954c80208b9c930795dc5fcabfedd9274c8","omniAddress":"0x49828e3621839d6d95b02b525e0d2e4c02e9293ea7d3164cdf62790b58c4b9a5","assetId":"0x2a8e070f01af52d5a3abb3db90cf8a648d2f410e2481bc00203f62c13297ab11","index":"1","amount":"10000000000000"}]
+            }
+        },
+        "TEST2": {
+            "erc20": {
+                "name": "TEST2",
+                "mintTo": "0xe092b1fa25df5786d151246e492eed3d15ea4daa",
+                "mintNum": "21000000"
+            },
+            "transformer": {
+                "assetId": "0x0000000000000000000000000000000000000000000000000000000000000002",
+                "utxos": [{"txid":"0x574c52eca0d4d0db9feacd2fd0a4be349a6e27407d20e27da81ce1d479698c3d","omniAddress":"0x43ebb39f93001baab55ff811fc46e087b908b5657cf8a69825827967e5760df9","assetId":"0x0000000000000000000000000000000000000000000000000000000000000000","index":"1","amount":"100000000000000000"}]
+            }
+        }
+    }
+}
