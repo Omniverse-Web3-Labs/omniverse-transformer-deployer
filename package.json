@@ -4,17 +4,24 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prettier-format": "prettier --config .prettierrc 'src/*.ts' --write",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "prettier": "^3.3.3",
     "typescript": "^5.5.3"
   },
   "dependencies": {
+    "@omniverselab/deployer": "^0.1.4",
     "@types/config": "^3.3.4",
+    "@types/secp256k1": "^4.0.6",
+    "axios": "^1.7.2",
     "commander": "^12.1.0",
-    "config": "^3.3.12"
+    "config": "^3.3.12",
+    "ethers": "^6.13.1",
+    "secp256k1": "^5.0.0"
   }
 }
