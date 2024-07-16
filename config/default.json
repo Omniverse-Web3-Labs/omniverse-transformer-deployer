@@ -10,7 +10,7 @@
 		"local": "http://3.236.195.117:7788/get_local_token/?address=",
 		"omniverse": "http://3.236.195.117:7788/get_token/?address="
 	},
-    "beacon": "0x47C84c0B3c2452B6C22B9c07cac500fBA97f7Fa3",
+	"beacon": "0x47C84c0B3c2452B6C22B9c07cac500fBA97f7Fa3",
 	"transformers": {
 		"TEST1": {
 			"erc20": {
@@ -22,23 +22,16 @@
 				"assetId": "0x2a8e070f01af52d5a3abb3db90cf8a648d2f410e2481bc00203f62c13297ab11",
 				"utxos": [
 					{
-						"txid": "0x083df77b4bec878543993bd65db70aacbd27a133017468d0ccf77b3fa6c0ed18",
-						"omniAddress": "0x6fc2832e0c585996c6a88da79b406f26110b65d1012cf5eede9fb8a73dee2c5a",
+						"txid": "0x948de1bda80e965230af96957af06395b5b7d9498ba6db0e458e1154742ee4da",
+						"omniAddress": "0x36ebe314e3b392d6de92cb515ea3385a9303a219f48581440832d763968ded9a",
 						"assetId": "0x0000000000000000000000000000000000000000000000000000000000000000",
-						"index": 2,
-						"amount": "99999999999999"
-					},
-					{
-						"txid": "0x083df77b4bec878543993bd65db70aacbd27a133017468d0ccf77b3fa6c0ed18",
-						"omniAddress": "0x6fc2832e0c585996c6a88da79b406f26110b65d1012cf5eede9fb8a73dee2c5a",
-						"assetId": "0x2a8e070f01af52d5a3abb3db90cf8a648d2f410e2481bc00203f62c13297ab11",
-						"index": 0,
-						"amount": "10000000000000"
+						"index": 1,
+						"amount": "100000000000000"
 					}
 				]
 			},
-			"pubkey": "0x6fc2832e0c585996c6a88da79b406f26110b65d1012cf5eede9fb8a73dee2c5a",
-			"address": "0x809DaD71449108A98B10d8a58F8DE187Df214Fe2"
+			"pubkey": "0x36ebe314e3b392d6de92cb515ea3385a9303a219f48581440832d763968ded9a",
+			"address": "0x3b363F224CaE96E7d66Fbcc8f0B5a0bE5341aE9D"
 		}
 	}
 }

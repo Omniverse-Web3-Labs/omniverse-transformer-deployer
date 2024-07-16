@@ -8,6 +8,10 @@ import fs from 'fs';
 import { execSync } from 'child_process';
 import { Request } from './request';
 
+if (!fs.existsSync(config.get("tranformerDeployInfoPath"))) {
+    fs.writeFileSync(config.get("tranformerDeployInfoPath"), "{}");
+}
+
 function convertToTransformersFromConfig(
     transformers: any
 ): Map<string, TransformerConfig> {
@@ -45,8 +49,13 @@ program
         const pubkey = '0x' + wallet.publicKey.substring(4);
         console.log('Public Key:', pubkey);
 
-        let sks = JSON.parse(fs.readFileSync(config.get('secret')).toString());
+        let sks: any = {};
+        if (fs.existsSync(config.get('secret'))) {
+            sks = JSON.parse(fs.readFileSync(config.get('secret')).toString());
+        }
         sks[`${name}-transformer-AASigner`] = wallet.privateKey;
+        sks[`${name}-erc20`] = wallet.privateKey;
+        sks[`${name}-transformer`] = wallet.privateKey;
         fs.writeFileSync(config.get('secret'), JSON.stringify(sks, null, '\t'));
 
         let configs = JSON.parse(
@@ -85,7 +94,7 @@ program
         const request = new Request(config.get('network.server'));
         let preTransferData = await request.rpc('preTransfer', [
             {
-                assetId: config.get(`transformers.${name}.transformer.assetId`),
+                assetId: "0x0000000000000000000000000000000000000000000000000000000000000000",
                 address: config.get(`transformers.${name}.pubkey`),
                 outputs: [
                     {
@@ -110,13 +119,6 @@ program
                     '0x0000000000000000000000000000000000000000000000000000000000000000',
                 index: preTransferData.feeInputs[0].index,
                 amount: preTransferData.feeInputs[0].amount
-            },
-            {
-                txid: preTransferData.inputs[0].txid,
-                omniAddress: preTransferData.inputs[0].address,
-                assetId: transformer.assetId,
-                index: preTransferData.inputs[0].index,
-                amount: preTransferData.inputs[0].amount
             }
         ];
         fs.writeFileSync(
