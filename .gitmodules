@@ -1,0 +1,3 @@
+[submodule "submodules/omniverse-transformer"]
+	path = submodules/omniverse-transformer
+	url = git@virgil.github.com:Omniverse-Web3-Labs/omniverse-transformer.git

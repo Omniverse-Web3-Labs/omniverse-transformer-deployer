@@ -7,7 +7,7 @@
 		"server": "http://3.236.195.117:6358"
 	},
 	"tranformerDeployInfoPath": "./deployments.json",
-    "transformerPath": "/Users/georgehuang/Program/omniverse-transformer/",
+    "transformerPath": "./submodules/omniverse-transformer/",
 	"faucet": {
 		"local": "http://3.236.195.117:7788/get_local_token/?address=",
 		"omniverse": "http://3.236.195.117:7788/get_token/?address="
