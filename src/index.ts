@@ -1,7 +1,6 @@
 import { program } from 'commander';
-import { Choreographer } from '@omniverselab/deployer/dist/src/choreographer';
+import { Choreographer, TransformerConfig } from '@omniverselab/deployer';
 import config from 'config';
-import { TransformerConfig } from '@omniverselab/deployer/dist/src/types';
 import { ethers } from 'ethers';
 import secp256k1 from 'secp256k1';
 import fs from 'fs';
@@ -13,14 +12,23 @@ if (!fs.existsSync(config.get("tranformerDeployInfoPath"))) {
 }
 
 function convertToTransformersFromConfig(
-    transformers: any
+    transformers: any,
+    projectPath: string
 ): Map<string, TransformerConfig> {
     let ret = new Map<string, TransformerConfig>();
     for (let name in transformers) {
         const tf: TransformerConfig = {
             name,
-            erc20: transformers[name].erc20,
-            transformer: transformers[name].transformer
+            erc20: {
+                projectPath,
+                template: "erc20",
+                data: transformers[name].erc20
+              },
+              transformer: {
+                projectPath,
+                template: "transformer",
+                data: transformers[name].transformer
+              }
         };
         ret.set(name, tf);
     }
@@ -132,14 +140,17 @@ program
     .description('deploy a transformer')
     .action(async (name: string) => {
         const network = {
-            rpc: config.get('network.rpc') as string
+            rpc: config.get('network.rpc') as string,
+            chainId: config.get('network.chainId') as string
         };
         const transformers = convertToTransformersFromConfig(
-            config.get('transformers')
+            config.get('transformers'),
+            config.get("transformerPath")
         );
         const cg = new Choreographer(network);
         await cg.init();
-        await cg.deployTransformer(transformers.get(name)!);
+        const sks = JSON.parse(fs.readFileSync(config.get("secret")).toString());
+        await cg.deployTransformer(transformers.get(name)!, sks[`${name}-transformer`]);
     });
 
 program.parse();

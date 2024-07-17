@@ -15,7 +15,7 @@
     "typescript": "^5.5.3"
   },
   "dependencies": {
-    "@omniverselab/deployer": "^0.1.4",
+    "@omniverselab/deployer": "^0.1.5",
     "@types/config": "^3.3.4",
     "@types/secp256k1": "^4.0.6",
     "axios": "^1.7.2",
