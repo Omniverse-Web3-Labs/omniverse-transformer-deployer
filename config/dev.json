@@ -1,0 +1,31 @@
+{
+    "secret": "./config/.secret.dev",
+	"network": "beacon",
+    "tranformerDeployInfoPath": "./deployments.dev.json",
+	"transformerPath": "./submodules/omniverse-transformer/",
+	"AASignerPath": "./submodules/omniverse-aa-signer/",
+    "transformers": {
+        "TEST1": {
+            "erc20": {
+                "name": "TEST1",
+                "mintTo": "0x0000000000000000000000000000000000000000",
+                "mintNum": "21000000"
+            },
+            "transformer": {
+				"NETWORK_NAME": "beacon",
+                "assetId": "0x2a8e070f01af52d5a3abb3db90cf8a648d2f410e2481bc00203f62c13297ab11",
+                "utxos": [{"txid":"0xd4f281956f52a51918c8dbdaf31089ef0ae0981c26a216e7248bebc46d3cc5fe","omniAddress":"0x78e01a8cb1656f30b9bdd1b5f3d8087e11d2e66da90e64ff93d7763e48da1620","assetId":"0x2a8e070f01af52d5a3abb3db90cf8a648d2f410e2481bc00203f62c13297ab11","index":"0","amount":"10000000000000"}]
+            },
+			"transformerSigner": {
+                "scanInterval": "10",
+                "secret": "config/.secret",
+                "contracts": {
+                    "omniverseAA": {
+                        "contractAbiPath": "./res/contracts/omniverseAA.json",
+                        "signer": "0x0ccCfc9fF119D5b1a1b4e2fEfDCd9b894A530ab2"
+                    }
+                }
+			}
+        }
+    }
+}

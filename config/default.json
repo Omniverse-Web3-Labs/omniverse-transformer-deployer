@@ -1,13 +1,9 @@
 {
 	"secret": "./config/.secret",
-	"network": {
-		"name": "develop",
-		"rpc": "http://3.236.195.117:8998",
-		"chainId": "1337",
-		"server": "http://3.236.195.117:6358"
-	},
+	"network": "beacon",
 	"tranformerDeployInfoPath": "./deployments.json",
-    "transformerPath": "./submodules/omniverse-transformer/",
+	"transformerPath": "./submodules/omniverse-transformer/",
+	"AASignerPath": "./submodules/omniverse-aa-signer/",
 	"faucet": {
 		"local": "http://3.236.195.117:7788/get_local_token/?address=",
 		"omniverse": "http://3.236.195.117:7788/get_token/?address="
@@ -30,10 +26,25 @@
 						"index": 1,
 						"amount": "100000000000000"
 					}
-				]
+				],
+				"NETWORK_NAME": "beacon"
 			},
-			"pubkey": "0x36ebe314e3b392d6de92cb515ea3385a9303a219f48581440832d763968ded9a",
-			"address": "0x3b363F224CaE96E7d66Fbcc8f0B5a0bE5341aE9D"
+			"transformerSigner": {
+				"template": "transformerSigner",
+				"projectPath": "/Users/georgehuang/Program/omniverse-aa-signer/",
+				"data": {
+					"scanInterval": "10",
+					"secret": "config/.secret",
+					"contracts": {
+						"omniverseAA": {
+							"contractAbiPath": "./res/contracts/omniverseAA.json",
+							"signer": "0x0ccCfc9fF119D5b1a1b4e2fEfDCd9b894A530ab2"
+						}
+					}
+				}
+			},
+			"pubkey": "0x33ffe07ad3ea47b8a8042814f4fc8d7025c9e26785b2460af1deb03c19e57174",
+			"address": "0xcf81Ebc52ec50Db1b09D452472a03c8c654fAdc5"
 		}
 	}
 }

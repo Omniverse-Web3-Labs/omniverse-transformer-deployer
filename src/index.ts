@@ -1,5 +1,5 @@
 import { program } from 'commander';
-import { Choreographer, TransformerConfig } from '@omniverselab/deployer';
+import { Choreographer, TransformerConfig, getServerInfo, getNetworkInfo } from '../../omniverse-services-deployer';
 import config from 'config';
 import { ethers } from 'ethers';
 import secp256k1 from 'secp256k1';
@@ -13,21 +13,27 @@ if (!fs.existsSync(config.get("tranformerDeployInfoPath"))) {
 
 function convertToTransformersFromConfig(
     transformers: any,
-    projectPath: string
+    transformerPath: string,
+    AASignerPath: string
 ): Map<string, TransformerConfig> {
     let ret = new Map<string, TransformerConfig>();
     for (let name in transformers) {
         const tf: TransformerConfig = {
             name,
             erc20: {
-                projectPath,
+                projectPath: transformerPath,
                 template: "erc20",
-                data: transformers[name].erc20
+                data: JSON.parse(JSON.stringify(transformers[name].erc20))
               },
               transformer: {
-                projectPath,
+                projectPath: transformerPath,
                 template: "transformer",
-                data: transformers[name].transformer
+                data: JSON.parse(JSON.stringify(transformers[name].transformer))
+              },
+              AASigner: {
+                projectPath: AASignerPath,
+                template: "transformerSigner",
+                data: JSON.parse(JSON.stringify(transformers[name].transformerSigner))
               }
         };
         ret.set(name, tf);
@@ -99,7 +105,8 @@ program
             throw new Error(`No transformer named ${name} is configured`);
         }
 
-        const request = new Request(config.get('network.server'));
+        const server = getServerInfo();
+        const request = new Request(server.rpc);
         let preTransferData = await request.rpc('preTransfer', [
             {
                 assetId: "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -139,14 +146,15 @@ program
     .command('deployTransformer <name>')
     .description('deploy a transformer')
     .action(async (name: string) => {
-        const network = {
-            rpc: config.get('network.rpc') as string,
-            chainId: config.get('network.chainId') as string
-        };
+        const network = getNetworkInfo(config.get('network') as string);
         const transformers = convertToTransformersFromConfig(
             config.get('transformers'),
-            config.get("transformerPath")
+            config.get("transformerPath"),
+            config.get("AASignerPath")
         );
+        transformers.forEach((value, key) => {
+            value.AASigner.data.contracts.omniverseAA.NETWORK_NAME = config.get('network');
+        });
         const cg = new Choreographer(network);
         await cg.init();
         const sks = JSON.parse(fs.readFileSync(config.get("secret")).toString());

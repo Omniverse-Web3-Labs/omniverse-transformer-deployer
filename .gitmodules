@@ -1,3 +1,6 @@
 [submodule "submodules/omniverse-transformer"]
 	path = submodules/omniverse-transformer
 	url = git@virgil.github.com:Omniverse-Web3-Labs/omniverse-transformer.git
+[submodule "submodules/omniverse-synchronizer"]
+	path = submodules/omniverse-synchronizer
+	url = git@virgil.github.com:Omniverse-Web3-Labs/omniverse-synchronizer.git
