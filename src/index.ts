@@ -129,7 +129,7 @@ async function createKMSKey(name: string) {
     // 取哈希的后 40 个字符（20 字节）作为以太坊地址
     const ethereumAddress = `0x${publicKeyHash.slice(-40)}`;
     
-    saveConfig(name, keyMetadata, ethereumAddress, pk!.compressedPublicKey, pk!.uncompressedPublicKey);
+    saveConfig(name, {signerType: 'kms', params: keyMetadata}, ethereumAddress, pk!.compressedPublicKey, pk!.uncompressedPublicKey);
 
     fundAccount(ethereumAddress, pk!.compressedPublicKey);
 }
@@ -193,7 +193,7 @@ async function createPrivateKey(name: string) {
     const uncompressed = '0x' + Buffer.from(pubkey).toString('hex').substring(2);
     console.log('Public Key:', compressed);
 
-    saveConfig(name, wallet.privateKey, wallet.address, compressed, uncompressed);
+    saveConfig(name, {signerType: 'sk', params: {sk: wallet.privateKey}}, wallet.address, compressed, uncompressed);
 
     fundAccount(wallet.address, compressed);
 }
