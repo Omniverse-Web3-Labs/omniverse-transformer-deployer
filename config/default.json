@@ -8,7 +8,6 @@
 		"local": "http://127.0.0.1:7788/get_local_token/?address=",
 		"omniverse": "http://127.0.0.1:7788/get_token/?address="
 	},
-	"beacon": "0x47C84c0B3c2452B6C22B9c07cac500fBA97f7Fa3",
 	"transformers": {
 		"KARANA": {
 			"erc20": {
