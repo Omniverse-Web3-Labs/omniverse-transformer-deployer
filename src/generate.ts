@@ -10,8 +10,9 @@ import fs from 'fs';
 import { SignerType } from '../../omniverse-services-deployer';
 
 export async function createKMSKey(name: string) {
-    const kms = new AWS.KMS({
-    });
+    const kms = new AWS.KMS(kmsConfig.endpoint ? {
+      endpoint: kmsConfig.endpoint
+    } : {});
     
     async function getPublicKey(keyId: string) {
         const params: AWS.KMS.GetPublicKeyRequest = {
