@@ -7,6 +7,7 @@ import secp256k1 from 'secp256k1';
 import { execSync } from 'child_process';
 import config from 'config';
 import fs from 'fs';
+import { SignerType } from '../../omniverse-services-deployer';
 
 export async function createKMSKey(name: string) {
     const kms = new AWS.KMS({
@@ -126,6 +127,12 @@ function saveConfig(name: string, key: any, ethAddress: string, compressedPublic
     configs[`transformers`][`${name}`]['uncompressedPublicKey'] = uncompressedPublicKey;
     configs[`transformers`][`${name}`]['address'] = ethAddress;
     configs[`transformers`][`${name}`].transformerSigner.contracts.omniverseAA.signer = ethAddress;
+    if (key.signerType == 'kms') {
+        configs[`transformers`][`${name}`].transformer.SIGNER = SignerType.KMS_SIGNER;
+    }
+    else if (key.signerType == 'sk') {
+        configs[`transformers`][`${name}`].transformer.SIGNER = SignerType.SK_SIGNER;
+    }
     fs.writeFileSync(
         'config/default.json',
         JSON.stringify(configs, null, '\t')
