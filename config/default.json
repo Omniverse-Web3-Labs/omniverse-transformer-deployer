@@ -5,10 +5,9 @@
 	"transformerPath": "./submodules/omniverse-transformer/",
 	"AASignerPath": "./submodules/omniverse-aa-signer/",
 	"faucet": {
-		"local": "http://127.0.0.1:7789/get_local_token/?address=",
+		"local": "http://127.0.0.1:7788/get_local_token/?address=",
 		"omniverse": "http://127.0.0.1:7788/get_token/?address="
 	},
-	"beacon": "0x47C84c0B3c2452B6C22B9c07cac500fBA97f7Fa3",
 	"transformers": {
 		"KARANA": {
 			"erc20": {
@@ -35,12 +34,14 @@
 				"contracts": {
 					"omniverseAA": {
 						"contractAbiPath": "./res/contracts/omniverseAA.json",
-						"signer": "0xbE14B3e62A997fAe4df21Ff7E32682A2DC384d46"
+						"signer": "0xcf2d1868B92651919fb73dDE4a56f68498E4130B"
 					}
 				}
 			},
 			"pubkey": "0xc7d81dc3fcc31d0b0419cb8338d86d902e9a920e7c916b407f8adc58c56e96d3",
-			"address": "0xCA00dE45c3E34EF617925C6Ca87E47A15ff0FC91"
+			"address": "0xcf2d1868B92651919fb73dDE4a56f68498E4130B",
+			"compressedPublicKey": "0x6083db8fc3930b69050a0652a0201710a7ed299124798b400ca8d9fd3fbc9b62",
+			"uncompressedPublicKey": "0x6083db8fc3930b69050a0652a0201710a7ed299124798b400ca8d9fd3fbc9b628b53f604d01bccf0838b5e3be6ce0f2927089631868883f82dab543b639be71f"
 		}
 	}
 }

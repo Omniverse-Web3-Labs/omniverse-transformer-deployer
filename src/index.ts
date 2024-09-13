@@ -1,11 +1,9 @@
 import { program } from 'commander';
 import { Choreographer, TransformerConfig, getServerInfo, getNetworkInfo } from '../../omniverse-services-deployer';
 import config from 'config';
-import { ethers } from 'ethers';
-import secp256k1 from 'secp256k1';
 import fs from 'fs';
-import { execSync } from 'child_process';
 import { Request } from './request';
+import { createKMSKey, createPrivateKey } from './generate';
 
 if (!fs.existsSync(config.get("tranformerDeployInfoPath"))) {
     fs.writeFileSync(config.get("tranformerDeployInfoPath"), "{}");
@@ -42,65 +40,26 @@ function convertToTransformersFromConfig(
 }
 
 program
-    .command('generateSK <name>')
+    .command('gen <name>')
+    .option('-k, --kms', 'if use KMS', false)
     .description('generate a private key for a transformer')
-    .action(async (name: string) => {
+    .action(async (name: string, options: any) => {
         if (!config.has(`transformers.${name}`)) {
             throw new Error(`No transformer named ${name} is configured`);
         }
-        const wallet = ethers.Wallet.createRandom();
-        console.log('Address: ', wallet.address);
-        console.log('Private Key: ', wallet.privateKey);
-        console.log('Mnemonic: ', wallet.mnemonic!.phrase);
-        var pubKey = secp256k1.publicKeyCreate(
-            Buffer.from(wallet.privateKey.substring(2), 'hex'),
-            false
-        );
-        console.log(
-            'uncompressed',
-            '0x' + Buffer.from(pubKey).toString('hex').substring(2)
-        );
-        const pubkey = '0x' + wallet.publicKey.substring(4);
-        console.log('Public Key:', pubkey);
-
-        let sks: any = {};
-        if (fs.existsSync(config.get('secret'))) {
-            sks = JSON.parse(fs.readFileSync(config.get('secret')).toString());
+        
+        if (options.kms) {
+            createKMSKey(name);
         }
-        sks[`${name}-transformer-AASigner`] = wallet.privateKey;
-        sks[`${name}-erc20`] = wallet.privateKey;
-        sks[`${name}-transformer`] = wallet.privateKey;
-        fs.writeFileSync(config.get('secret'), JSON.stringify(sks, null, '\t'));
-
-        let configs = JSON.parse(
-            fs.readFileSync('config/default.json').toString()
-        );
-        configs[`transformers`][`${name}`]['pubkey'] = pubkey;
-        configs[`transformers`][`${name}`]['address'] = wallet.address;
-        fs.writeFileSync(
-            'config/default.json',
-            JSON.stringify(configs, null, '\t')
-        );
-
-        if (!config.has(`faucet`)) {
-            return;
+        else {
+            createPrivateKey(name);
         }
-
-        console.log('fund account');
-
-        let ret = execSync(
-            `curl "${config.get('faucet.local')}${wallet.address}"`
-        );
-        console.log('local', ret.toString());
-
-        ret = execSync(`curl "${config.get('faucet.omniverse')}${pubkey}"`);
-        console.log('local', ret.toString());
     });
 
 program
-    .command('showUTXO <name>')
+    .command('utxo <name>')
     .description('show UTXOs by request `PreTransfer`')
-    .action(async (name: string) => {
+    .action(async (name: string, options: any) => {
         if (!config.has(`transformers.${name}`)) {
             throw new Error(`No transformer named ${name} is configured`);
         }
@@ -110,7 +69,7 @@ program
         let preTransferData = await request.rpc('preTransfer', [
             {
                 assetId: "0x0000000000000000000000000000000000000000000000000000000000000000",
-                address: config.get(`transformers.${name}.pubkey`),
+                address: config.get(`transformers.${name}.compressedPublicKey`),
                 outputs: [
                     {
                         address:
@@ -143,7 +102,7 @@ program
     });
 
 program
-    .command('deployTransformer <name>')
+    .command('deploy <name>')
     .description('deploy a transformer')
     .action(async (name: string) => {
         const network = getNetworkInfo(config.get('network') as string);
@@ -158,7 +117,7 @@ program
         const cg = new Choreographer(network);
         await cg.init();
         const sks = JSON.parse(fs.readFileSync(config.get("secret")).toString());
-        await cg.deployTransformer(transformers.get(name)!, sks[`${name}-transformer`]);
+        await cg.deployTransformer(transformers.get(name)!, sks.deployer);
     });
 
 program.parse();
