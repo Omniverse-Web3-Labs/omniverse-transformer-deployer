@@ -116,7 +116,7 @@ function saveConfig(name: string, key: any, ethAddress: string, compressedPublic
     if (fs.existsSync(config.get('secret'))) {
         sks = JSON.parse(fs.readFileSync(config.get('secret')).toString());
     }
-    sks[`${name}-transformer-AASigner`] = key;
+    sks[`${name}-AASigner`] = key;
     sks[`${name}-erc20`] = key;
     sks[`${name}-transformer`] = key;
     fs.writeFileSync(config.get('secret'), JSON.stringify(sks, null, '\t'));

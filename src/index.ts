@@ -1,5 +1,5 @@
 import { program } from 'commander';
-import { Choreographer, TransformerConfig, getServerInfo, getNetworkInfo } from '../../omniverse-services-deployer';
+import { Choreographer, TransformerConfig, getServerInfo, getNetworkInfo } from '../../../george/karana';
 import config from 'config';
 import fs from 'fs';
 import { Request } from './request';
@@ -65,7 +65,7 @@ program
         }
 
         const server = getServerInfo();
-        const request = new Request(server.rpc);
+        const request = new Request(`${server.schema}://${server.host}`);
         let preTransferData = await request.rpc('preTransfer', [
             {
                 assetId: "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -114,10 +114,40 @@ program
         transformers.forEach((value, key) => {
             value.AASigner.data.contracts.omniverseAA.NETWORK_NAME = config.get('network');
         });
-        const cg = new Choreographer(network);
+        const cg = new Choreographer("empty", network);
         await cg.init();
         const sks = JSON.parse(fs.readFileSync(config.get("secret")).toString());
         await cg.deployTransformer(transformers.get(name)!, sks.deployer);
+    });
+
+program
+    .command('deploy-signer <name>')
+    .option('-e, --env <env>', 'The environment name')
+    .description('deploy a signer')
+    .action(async (name: string, {env}: any) => {
+        const network = getNetworkInfo(config.get('network') as string);
+        const sks = JSON.parse(fs.readFileSync(config.get("secret")).toString());
+
+        // update config
+        let configs = JSON.parse(
+            fs.readFileSync('config/default.json').toString()
+        );
+        const deployments = JSON.parse(fs.readFileSync('deployments.json').toString());
+        const aaSigner = configs[`transformers`][`${name}`].transformerSigner;
+        aaSigner.contracts.omniverseAA.contractAddress = deployments[`${name}-transformer`];
+        aaSigner.signerSecret = JSON.stringify(sks[`${name}-AASigner`]);
+        fs.writeFileSync(
+            'config/default.json',
+            JSON.stringify(configs, null, '\t')
+        );
+        
+        const cg = new Choreographer(env, network);
+        await cg.init();
+        await cg.deployAASigner(name, {
+            projectPath: config.get('AASignerPath'),
+            template: "aaSigner",
+            data: aaSigner
+        });
     });
 
 program.parse();
